@@ -5,6 +5,7 @@ import mysql.connector
 
 sucursales = ['apatzingan','morelia']
 def insertDirecciones(mydb,sucursal,n):
+    #mydb: mysql.connector.connect, 
     #sucursal: str, sucursal
     #n: int, cantidad de direcciones a insertar.
 
@@ -104,5 +105,3 @@ def insertRegistro(mydb,sucursal):
       insertCientes(mydb,sucursal,n)
     elif tabla=='dirección':
       insertDirecciones(mydb,sucursal,n)
-
-    return ""

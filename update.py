@@ -6,6 +6,7 @@ import mysql.connector
 sucursales = ['apatzingan','morelia']
 
 def updateDirecciones(mydb,sucursal,n):
+    #mydb: mysql.connector.connect, 
     #sucursal: str, sucursal
     #n: int, cantidad de direcciones a actualizar.
 
@@ -63,6 +64,7 @@ def updateDirecciones(mydb,sucursal,n):
 
 
 def updateClientes(mydb,sucursal,n):
+    #mydb: mysql.connector.connect, 
     #sucursal: str, sucursal
     #n: int, cantidad de clientes a actualizar.
     
@@ -134,5 +136,3 @@ def updateRegistro(mydb,sucursal):
       updateClientes(mydb,sucursal,n)
     elif tabla=='dirección':
       updateDirecciones(mydb,sucursal,n)
-
-    return ""
