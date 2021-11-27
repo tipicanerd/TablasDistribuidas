@@ -34,13 +34,15 @@ printMenu()
 op = int(input("¿Qué quieres hacer? ")) 
 
 while op>0 or op<=5:
-    if op==4 or op==5:
+    if op==3:
         print("Aún no está implementado")
         break
     elif op==1:
         insertRegistro(mydb,sucursal)
     elif op==2:
         updateRegistro(mydb,sucursal)
+    elif op==4:
+        createTables(mydb)
     printMenu()
     op = int(input("¿Qué quieres hacer? "))
 
