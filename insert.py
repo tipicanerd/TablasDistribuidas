@@ -3,7 +3,21 @@
 import getpass
 import mysql.connector
 
-sucursales = ['apatzingan','morelia']
+"""#Datos de conexion.
+sucursal = input("Sucursal: ").lower()
+usr = input("Usuario: ")
+pwd = getpass.getpass("Contraseña: ")
+
+
+#Conexión
+mydb = mysql.connector.connect(
+  host="localhost",
+  user=usr,
+  password=pwd
+  )
+
+mycursor = mydb.cursor()"""
+
 def insertDirecciones(mydb,sucursal,n):
     #mydb: mysql.connector.connect, 
     #sucursal: str, sucursal
@@ -72,28 +86,13 @@ def insertCientes(mydb,sucursal,n):
         print("-"*20)
 
 
-"""#Datos de conexion.
-sucursal = input("Sucursal: ").lower()
-usr = input("Usuario: ")
-pwd = getpass.getpass("Contraseña: ")
-
-
-#Conexión
-mydb = mysql.connector.connect(
-  host="localhost",
-  user=usr,
-  password=pwd
-  )
-
-mycursor = mydb.cursor()"""
-
-#Prepare Staments auxiliares
-
 def insertRegistro(mydb,sucursal):
     #mydb: mysql.connector.connect
+    #sucursal: str, sucursal desde la que se trabaja.
 
     mycursor= mydb.cursor()
 
+    #Prepare Staments auxiliares
     mycursor.execute("PREPARE idGen FROM 'SET @lastid = (SELECT CONCAT(base,number) FROM adminSucursales.idConstructor WHERE base=?)'")
     mycursor.execute("PREPARE idUp FROM 'UPDATE adminSucursales.idConstructor SET number= number+1 WHERE base=?';")
 

@@ -3,7 +3,20 @@
 import getpass
 import mysql.connector
 
-sucursales = ['apatzingan','morelia']
+"""#Datos de conexion.
+sucursal = input("Sucursal: ").lower()
+usr = input("Usuario: ")
+pwd = getpass.getpass("Contraseña: ")
+
+
+#Conexión
+mydb = mysql.connector.connect(
+  host="localhost",
+  user=usr,
+  password=pwd
+  )
+
+mycursor = mydb.cursor()"""
 
 def updateDirecciones(mydb,sucursal,n):
     #mydb: mysql.connector.connect, 
@@ -106,21 +119,6 @@ def updateClientes(mydb,sucursal,n):
         print(f"Se ha actualizado los registros del cliente {idCliente}")
         print("-"*20)
 
-
-"""#Datos de conexion.
-sucursal = input("Sucursal: ").lower()
-usr = input("Usuario: ")
-pwd = getpass.getpass("Contraseña: ")
-
-
-#Conexión
-mydb = mysql.connector.connect(
-  host="localhost",
-  user=usr,
-  password=pwd
-  )
-
-mycursor = mydb.cursor()"""
 
 #################
 

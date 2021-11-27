@@ -5,7 +5,7 @@ import mysql.connector
 
 from insert import insertRegistro
 from update import updateRegistro
-
+from newOffice import createTables
 
 def printMenu():
     print("1. Insertar registros")
@@ -33,7 +33,7 @@ mydb = mysql.connector.connect(
 printMenu()
 op = int(input("¿Qué quieres hacer? ")) 
 
-while op>0 or op<=5:
+while op>0 or op<5:
     if op==3:
         print("Aún no está implementado")
         break
@@ -41,7 +41,7 @@ while op>0 or op<=5:
         insertRegistro(mydb,sucursal)
     elif op==2:
         updateRegistro(mydb,sucursal)
-    elif op==4:
+    else:
         createTables(mydb)
     printMenu()
     op = int(input("¿Qué quieres hacer? "))
