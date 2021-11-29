@@ -3,88 +3,139 @@
 import getpass
 import mysql.connector
 
-"""#Datos de conexion.
-sucursal = input("Sucursal: ").lower()
-usr = input("Usuario: ")
-pwd = getpass.getpass("Contraseña: ")
+from select_ import *
 
+def insertDirecciones(mydb, sucursal, n):
+    mycursor = mydb.cursor()
 
-#Conexión
-mydb = mysql.connector.connect(
-  host="localhost",
-  user=usr,
-  password=pwd
-  )
+    suc = "D" + sucursal.upper()[:3]
+    mycursor.execute("SET @suc=%s",(suc,))
+    #id_dir = 1
 
-mycursor = mydb.cursor()"""
+    #Lista de direcciones
+    Dirs = []
 
-def insertDirecciones(mydb,sucursal,n):
-    #mydb: mysql.connector.connect, 
-    #sucursal: str, sucursal
-    #n: int, cantidad de direcciones a insertar.
+    sucursales = getSucursales(mydb)
+    for s in sucursales:
+            mycursor.execute(f"SELECT id_cliente, Calle, Numero, Colonia, Estado, CP FROM {s}.direcciones")
+            Dirs.extend(mycursor.fetchall())
 
-    mycursor= mydb.cursor()
+    direcciones = ""
 
-    id_dir = 1
-  
     for i in range(n):
         print("-"*20)
         id_cliente = input("id del cliente: ")
+
+        #Revisar que el cliente sí pertenezca a la sucursal
+        if id_cliente[:3]!=suc[1:]:
+            print(f"El cliente {id_cliente} no pertenece a la sucursal {sucursal}.")
+            continue
+
         calle = input("Calle: ")
         numero = int(input("No.: "))
         Colonia = input("Colonia: ")
         Estado = input("Estado: ")
         CP= input("CP: ")
 
-        
-        insertQuery = f"INSERT INTO {sucursal}.direcciones VALUES{id_cliente, id_dir, calle, numero, Colonia, Estado, CP}"
-        #print(insertQuery)
-        values = (id_cliente, calle, numero, Colonia, Estado, CP)
+        #Verificar que sea una dirección sea única.
+        nueva_dir = tuple([id_cliente,calle,numero, Colonia, Estado, CP])
+        while nueva_dir in Dirs:
+            print("Dirección registrada en la base de datos.\nLas opciones disponibles son:")
+            print("1. Omitir registro.")
+            print("2. Cambiar valores de inserción.")
+            dec = int(input("¿Qué desea hacer? "))
+            if dec==1:
+                break
+            else:
+                id_cliente = input("id del cliente: ")
+                calle = input("Calle: ")
+                numero = int(input("No.: "))
+                Colonia = input("Colonia: ")
+                Estado = input("Estado: ")
+                CP= input("CP: ")
 
-        mycursor.execute(insertQuery)
-        mydb.commit()
-
-        print("Se han insertado la dirección: ",values)
-        print("En la sucursal",sucursal)
-        print("-"*20)
+        if dec==1:
+            continue
 
 
-def insertCientes(mydb,sucursal,n):
-    #sucursal: str, sucursal
-    #n: int, cantidad de clientes a insertar.
+        #mycursor.execute("EXECUTE dirIdUp USING @suc")
+        direcciones += f"('{id_cliente}', '{calle}', {numero}, '{Colonia}', '{Estado}', '{CP}'),\n"  
+
+    if direcciones=="":
+        return 
+
+    direcciones=direcciones[:-2] #Quitar coma del final
+    insertQuery = f"INSERT INTO {sucursal}.direcciones (id_cliente,calle,numero,Colonia,Estado,CP) VALUES {direcciones}"
+    #print(insertQuery)
+    mycursor.execute(insertQuery)
+    mydb.commit()
+
+    print("Se han insertado las direcciones: \n", direcciones)
+    print("En la sucursal",sucursal)
+    print("-"*20)
+
+def insertClientes(mydb, sucursal, n):
+
+    mycursor = mydb.cursor()
+
+    #Lista de RFCs
+    RFCs = []
+    sucursales = getSucursales(mydb)
+    for s in sucursales:
+            mycursor.execute(f"SELECT RFC FROM {s}.clientes")
+            RFCs.extend(mycursor.fetchall())
     
-    mycursor= mydb.cursor()
+    RFCs = set([t[0] for t in RFCs])
 
     suc = sucursal.upper()[:3]
     mycursor.execute("SET @suc=%s",(suc,))
-  
+
+    clientes = ""
+
     for i in range(n):
         print("-"*20)
         Nombre = input("Nombre: ")
         ApellidoPaterno = input("Apellido Paterno: ")
         ApellidoMaterno = input("Apellido Materno: ")
-        RFC = input("RFC: ")
+        rfc = input("RFC: ")
 
+        #Si el RFC ya está registrado
+        while rfc in RFCs:
+            print("RFC registrado en la base de datos.\nLas opciones disponibles son:")
+            print("1. Omitir registro.")
+            print("2. Cambiar valores de inserción.")
+            dec = int(input("¿Qué desea hacer? "))
+            if dec==1:
+                break
+            else:
+                Nombre = input("Nombre: ")
+                ApellidoPaterno = input("Apellido Paterno: ")
+                ApellidoMaterno = input("Apellido Materno: ")
+                rfc = input("RFC: ")
+
+        if dec==1:
+            continue
         
+        #Crear id
         mycursor.execute("EXECUTE idGen USING @suc")
-
         mycursor.execute("SELECT @lastid")
-
         idCliente = mycursor.fetchall()[0][0]
-        insertQuery = f"INSERT INTO {sucursal}.clientes VALUES{idCliente,Nombre,ApellidoPaterno, ApellidoMaterno, RFC}"
-        #print(insertQuery)
-        values = (idCliente,Nombre,ApellidoPaterno, ApellidoMaterno, RFC)
-
-        mycursor.execute(insertQuery)
 
         mycursor.execute("EXECUTE idUp USING @suc")
 
-        mydb.commit()
+        clientes += f"('{idCliente}','{Nombre}','{ApellidoPaterno}','{ApellidoMaterno}','{rfc}'),\n"
 
-        print("Se hainsertado al cliente: ",values)
-        print("En la sucursal",sucursal)
-        print("-"*20)
+    #Si al final no se insertó nada, regresar.
+    if clientes=="":
+        return
 
+    clientes = clientes[:-2]
+    #print(clientes)
+    mycursor.execute(f"INSERT INTO {sucursal}.clientes (id,nombre,apellidoPaterno,apellidoMaterno,RFC) VALUES {clientes}")
+    mydb.commit()
+    print(f"Se han insertado los clientes:\n{clientes}")
+    print("En la sucursal",sucursal)
+    print("-"*20)
 
 def insertRegistro(mydb,sucursal):
     #mydb: mysql.connector.connect
@@ -96,11 +147,11 @@ def insertRegistro(mydb,sucursal):
     mycursor.execute("PREPARE idGen FROM 'SET @lastid = (SELECT CONCAT(base,number) FROM adminSucursales.idConstructor WHERE base=?)'")
     mycursor.execute("PREPARE idUp FROM 'UPDATE adminSucursales.idConstructor SET number= number+1 WHERE base=?';")
 
-    tabla = input('¿Qué deseas agregar? (cliente|dirección) ')
+    tabla = input('¿Qué desea agregar? (cliente|dirección) ')
 
-    n = int(input('¿Cuántos registros vas a añadir? '))
+    n = int(input('¿Cuántos registros va a añadir? '))
 
-    if tabla=='cliente':
-      insertCientes(mydb,sucursal,n)
-    elif tabla=='dirección':
+    if tabla.lower() == 'cliente':
+      insertClientes(mydb,sucursal,n)
+    elif tabla.lower() == 'dirección':
       insertDirecciones(mydb,sucursal,n)

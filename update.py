@@ -3,20 +3,6 @@
 import getpass
 import mysql.connector
 
-"""#Datos de conexion.
-sucursal = input("Sucursal: ").lower()
-usr = input("Usuario: ")
-pwd = getpass.getpass("Contraseña: ")
-
-
-#Conexión
-mydb = mysql.connector.connect(
-  host="localhost",
-  user=usr,
-  password=pwd
-  )
-
-mycursor = mydb.cursor()"""
 
 def updateDirecciones(mydb,sucursal,n):
     #mydb: mysql.connector.connect, 
@@ -126,11 +112,11 @@ def updateRegistro(mydb,sucursal):
     #cursor: mysql.connector.connect.cursor
 
     #mycursor = mydb.cursor()
-    tabla = input('¿Qué tabla deseas actualizar? (cliente|dirección) ')
+    tabla = input('¿Qué tabla desea actualizar? (cliente|dirección) ')
 
-    n = int(input('¿Cuántos registros vas a actualizar? '))
+    n = int(input('¿Cuántos registros va a actualizar? '))
 
-    if tabla=='cliente':
+    if tabla.lower() == 'cliente':
       updateClientes(mydb,sucursal,n)
-    elif tabla=='dirección':
+    elif tabla.lower() =='dirección':
       updateDirecciones(mydb,sucursal,n)

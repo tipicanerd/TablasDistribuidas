@@ -8,14 +8,16 @@ CREATE TABLE idConstructor(
 	base CHAR(3) NOT NULL
 );
 
-INSERT INTO idConstructor VALUES
-(1,'MOR'), (1,'APA');
-
-
-
+#INSERT INTO idConstructor VALUES
+#(1,'MOR'), (1,'APA');
 
 PREPARE idGen FROM 'SET @lastid = (SELECT CONCAT(base,number) FROM adminSucursales.idConstructor WHERE base=?)';
 PREPARE idUp FROM 'UPDATE adminSucursales.idConstructor SET number= number+1 WHERE base=?';
+
+CREATE TABLE sucursales(
+	id INT(6) ZEROFILL NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(250) NOT NULL
+);
 
 #-----
 
@@ -24,7 +26,7 @@ CREATE TABLE clientes(
 	nombre VARCHAR(250) NOT NULL,
 	apellidoPaterno VARCHAR(250),
 	apellidoMaterno VARCHAR(250),
-	RFC CHAR(13) UNIQUE
+	RFC CHAR(13) UNIQUE NOT NULL
 );
 
 CREATE TABLE direcciones(

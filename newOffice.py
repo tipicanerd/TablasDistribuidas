@@ -21,14 +21,20 @@ def createTables(mydb):
     #mydb: mysql.connector.connect, 
 
     mycursor = mydb.cursor()
-
-    nueva_sucursal = input("¿Cuál es la nueva sucursal? ")
+    while(True):
+      nueva_sucursal = input("¿Cuál es la nueva sucursal? ")
+      if(nueva_sucursal):
+        print(f"Se creó la sucursal {nueva_sucursal}")
+        break
 
     suc = nueva_sucursal.upper()[:3]
     mycursor.execute("INSERT INTO adminSucursales.idConstructor VALUES(1,%s)",(suc,))
 
-    mycursor.execute("CREATE DATABASE %s",(nueva_sucursal,))
-    mycursor.execute("USE %s",(nueva_sucursal,))
+    mycursor.execute(f"CREATE DATABASE {nueva_sucursal}")#,(nueva_sucursal,))
+
+    mycursor.execute(f"INSERT INTO adminSucursales.sucursales (nombre) VALUES ('{nueva_sucursal}')")
+
+    mycursor.execute(f"USE {nueva_sucursal}")#,(nueva_sucursal,))
 
     query2 = """CREATE TABLE clientes(
       id CHAR(9) PRIMARY KEY,
@@ -51,4 +57,5 @@ def createTables(mydb):
 
     mycursor.execute(query2)
     mycursor.execute(query3)
+    
     mydb.commit()
