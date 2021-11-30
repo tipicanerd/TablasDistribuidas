@@ -151,7 +151,7 @@ def select(mydb,sucursales,columns,conditions = None):
 
     if(conditions in [None, {}]):
         for s in sucursales:
-            print(f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente")
+            #print(f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente")
             mycursor.execute(f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente")
             clientes += mycursor.fetchall()
         return clientes
