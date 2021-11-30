@@ -153,6 +153,7 @@ def select(mydb,sucursales,columns,conditions = None):
     for col in columns:
         if(col in dirColumns):
             tieneDirecciones = True
+            break
 
 
     if(conditions in [None, {}]):
