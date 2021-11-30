@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 import mysql.connector
+from sucursalesGen import getSucursales
 
 cliColumns = ["id","nombre","apellidoPaterno","apellidoMaterno","RFC"]
 dirColumns = ["id_cliente","dir_id","calle","numero","Colonia","Estado","CP"]
 params = ["nombre","apellidoPaterno","apellidoMaterno","RFC","id","calle","numero","Colonia","Estado","CP","dir_id"]
-
 def selectMenu():
     print("-"*20)
     print("SELECCIONAR CLIENTE Y/O DIRECCIÓN\n")
@@ -264,15 +264,6 @@ def selectAll(mydb, sucursales):
     datos = select(mydb,sucursales,columns)
 
     return datos, columns
-
-
-#Obtener lista de todas las sucursales que hay
-def getSucursales(mydb):
-    mycursor = mydb.cursor()
-    mycursor.execute("SELECT nombre FROM adminSucursales.sucursales")
-    sucursales = mycursor.fetchall()
-    sucursales = [sucursal[0] for sucursal in sucursales]
-    return sucursales
 
 
 #Imprimir por columnas la búsqueda
