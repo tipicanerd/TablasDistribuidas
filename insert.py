@@ -38,6 +38,7 @@ def insertDirecciones(mydb, sucursal, n):
         CP= input("CP: ")
 
         #Verificar que sea una dirección sea única.
+        dec = 0
         nueva_dir = tuple([id_cliente,calle,numero, Colonia, Estado, CP])
         while nueva_dir in Dirs:
             print("Dirección registrada en la base de datos.\nLas opciones disponibles son:")
@@ -100,6 +101,7 @@ def insertClientes(mydb, sucursal, n):
         rfc = input("RFC: ")
 
         #Si el RFC ya está registrado
+        dec = 0
         while rfc in RFCs:
             print("RFC registrado en la base de datos.\nLas opciones disponibles son:")
             print("1. Omitir registro.")

@@ -148,20 +148,42 @@ def select(mydb,sucursales,columns,conditions = None):
     mycursor = mydb.cursor()
     clientes = []
     colString = createColString(columns)
+    query = ""
+    tieneDirecciones = False
+    for col in columns:
+        if(col in dirColumns):
+            tieneDirecciones = True
+
 
     if(conditions in [None, {}]):
-        for s in sucursales:
-            #print(f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente")
-            mycursor.execute(f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente")
-            clientes += mycursor.fetchall()
+        if(tieneDirecciones):
+            for s in sucursales:
+                query = f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente"
+                #print(query)
+                mycursor.execute(query)
+                clientes += mycursor.fetchall()
+        else:
+            for s in sucursales:
+                query = f"SELECT {colString} FROM {s}.clientes"
+                #print(query)
+                mycursor.execute(query)
+                clientes += mycursor.fetchall()
         return clientes
+            
 
-    #condString = createCondString(conditions)
-    for s in sucursales:
-        print(f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente WHERE {condString}")
-        mycursor.execute(f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente WHERE {condString}")
-        clientes += mycursor.fetchall()
-
+    condString = createCondString(conditions)
+    if(tieneDirecciones):
+        for s in sucursales:
+            query = f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente WHERE {condString}"
+            #print(query)
+            mycursor.execute(f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente WHERE {condString}")
+            clientes += mycursor.fetchall()
+    else:
+        for s in sucursales:
+            query = f"SELECT {colString} FROM {s}.clientes  WHERE {condString}"
+            #print(query)
+            mycursor.execute(query)
+            clientes += mycursor.fetchall()
     return clientes
 
 
