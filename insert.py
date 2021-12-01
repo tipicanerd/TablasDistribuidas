@@ -14,7 +14,6 @@ def insertDirecciones(mydb, sucursal, n):
 
     #Lista de direcciones
     Dirs = []
-
     sucursales = getSucursales(mydb)
     for s in sucursales:
             mycursor.execute(f"SELECT id_cliente, Calle, Numero, Colonia, Estado, CP FROM {s}.direcciones")
@@ -23,22 +22,51 @@ def insertDirecciones(mydb, sucursal, n):
     direcciones = ""
 
     for i in range(n):
+        omitir = False
         print("-"*20)
         id_cliente = input("id del cliente: ")
+        calle = input("Calle: ")
+        
+        numero = input("No.: ")
+        #Nos aseguramos que dé un número
+        while numero.isdigit() == False:
+            print("Inserte correctamente el número.")
+            numero = input("No.: ")
+        numero = int(numero)
+
+        Colonia = input("Colonia: ")
+        Estado = input("Estado: ")
+
+        CP = input("CP: ")
+        #Nos aseguramos que dé un CP válido
+        while CP.isdigit() == False or len(CP)!=5:
+            print("Inserte un CP válido.")
+            CP = input("CP.: ")
 
         #Revisar que el cliente sí pertenezca a la sucursal
         if id_cliente[:3]!=suc[1:]:
             print(f"El cliente {id_cliente} no pertenece a la sucursal {sucursal}.")
             continue
 
-        calle = input("Calle: ")
-        numero = int(input("No.: "))
-        Colonia = input("Colonia: ")
-        Estado = input("Estado: ")
-        CP= input("CP: ")
+        #Revisar que el cliente exista
+        mycursor.execute(f"SELECT id FROM {sucursal}.clientes WHERE id='{id_cliente}'")
+        existe = len(mycursor.fetchall())
+
+        while existe==0:
+            print(f"El cliente {id_cliente} no está registrado.\nLas opciones disponibles son:")
+            print("1. Omitir el registro.")
+            print("2. Corregir el id.")
+            op = int(input("¿Qué operación va a realizar? "))
+            if op==1:
+                omitir = True
+                break
+            else:
+                id_cliente = input("id del cliente: ")
+                mycursor.execute(f"SELECT id FROM {sucursal}.clientes WHERE id='{id_cliente}'")
+                existe = len(mycursor.fetchall())
+
 
         #Verificar que sea una dirección sea única.
-        dec = 0
         nueva_dir = tuple([id_cliente,calle,numero, Colonia, Estado, CP])
         while nueva_dir in Dirs:
             print("Dirección registrada en la base de datos.\nLas opciones disponibles son:")
@@ -46,6 +74,7 @@ def insertDirecciones(mydb, sucursal, n):
             print("2. Cambiar valores de inserción.")
             dec = int(input("¿Qué desea hacer? "))
             if dec==1:
+                omitir = True
                 break
             else:
                 id_cliente = input("id del cliente: ")
@@ -53,9 +82,10 @@ def insertDirecciones(mydb, sucursal, n):
                 numero = int(input("No.: "))
                 Colonia = input("Colonia: ")
                 Estado = input("Estado: ")
-                CP= input("CP: ")
+                CP = input("CP: ")
 
-        if dec==1:
+
+        if omitir:
             continue
 
 
@@ -94,20 +124,33 @@ def insertClientes(mydb, sucursal, n):
     clientes = ""
 
     for i in range(n):
+        omitir = False
         print("-"*20)
         Nombre = input("Nombre: ")
         ApellidoPaterno = input("Apellido Paterno: ")
         ApellidoMaterno = input("Apellido Materno: ")
         rfc = input("RFC: ")
 
+        #Revisamos que el RFC sea válido.
+        while len(rfc)!=13:
+            print("El RFC insertado no es válido.\nLas opciones disponibles son:")
+            print("1. Omitir registro.")
+            print("2. Cambiar valores de inserción.")
+            dec = int(input("¿Qué desea hacer? "))
+            if dec==1:
+                omitir=True
+                break
+            else:
+                rfc = input("RFC: ")
+
         #Si el RFC ya está registrado
-        dec = 0
         while rfc in RFCs:
             print("RFC registrado en la base de datos.\nLas opciones disponibles son:")
             print("1. Omitir registro.")
             print("2. Cambiar valores de inserción.")
             dec = int(input("¿Qué desea hacer? "))
             if dec==1:
+                omitir=True
                 break
             else:
                 Nombre = input("Nombre: ")
@@ -115,7 +158,7 @@ def insertClientes(mydb, sucursal, n):
                 ApellidoMaterno = input("Apellido Materno: ")
                 rfc = input("RFC: ")
 
-        if dec==1:
+        if omitir:
             continue
         
         #Crear id
