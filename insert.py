@@ -50,20 +50,25 @@ def insertDirecciones(mydb, sucursal, n):
 
         #Revisar que el cliente exista
         mycursor.execute(f"SELECT id FROM {sucursal}.clientes WHERE id='{id_cliente}'")
-        existe = len(mycursor.fetchall())
+        clienteDatos = mycursor.fetchall()
 
-        while existe==0:
+        while len(clienteDatos)==0:
             print(f"El cliente {id_cliente} no está registrado.\nLas opciones disponibles son:")
             print("1. Omitir el registro.")
             print("2. Corregir el id.")
+            print("3. Insertar nuevo cliente.")
             op = int(input("¿Qué operación va a realizar? "))
             if op==1:
                 omitir = True
                 break
-            else:
+            elif op==2:
                 id_cliente = input("id del cliente: ")
                 mycursor.execute(f"SELECT id FROM {sucursal}.clientes WHERE id='{id_cliente}'")
-                existe = len(mycursor.fetchall())
+                clienteDatos = mycursor.fetchall()
+            else:
+                insertClientes(mydb, sucursal, n)
+                omitir=True
+                break
 
 
         #Verificar que sea una dirección sea única.
@@ -135,7 +140,7 @@ def insertClientes(mydb, sucursal, n):
         while len(rfc)!=13:
             print("El RFC insertado no es válido.\nLas opciones disponibles son:")
             print("1. Omitir registro.")
-            print("2. Cambiar valores de inserción.")
+            print("2. Cambiar valor de inserción.")
             dec = int(input("¿Qué desea hacer? "))
             if dec==1:
                 omitir=True
@@ -147,7 +152,7 @@ def insertClientes(mydb, sucursal, n):
         while rfc in RFCs:
             print("RFC registrado en la base de datos.\nLas opciones disponibles son:")
             print("1. Omitir registro.")
-            print("2. Cambiar valores de inserción.")
+            print("2. Cambiar valor de inserción.")
             dec = int(input("¿Qué desea hacer? "))
             if dec==1:
                 omitir=True
