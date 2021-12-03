@@ -2,7 +2,7 @@
 
 import getpass
 import mysql.connector
-
+from sucursalesGen import getSucursales
 """
 #Datos de conexion.
 sucursal = input("Sucursal: ").lower()
@@ -19,13 +19,17 @@ mydb = mysql.connector.connect(
 
 def createTables(mydb):
     #mydb: mysql.connector.connect, 
-
+    sucursales = getSucursales(mydb)
+    sucursales = [s.lower() for s in sucursales]
     mycursor = mydb.cursor()
     while(True):
       nueva_sucursal = input("¿Cuál es la nueva sucursal? ")
       if(nueva_sucursal):
-        print(f"Se creó la sucursal {nueva_sucursal}")
-        break
+        if(nueva_sucursal.lower() not in sucursales):
+          print(f"Se creó la sucursal {nueva_sucursal}")
+          break
+        else:
+          print(f"La sucursal ya se encuentra en el sistema, use otro nombre")
 
     suc = nueva_sucursal.upper()[:3]
     mycursor.execute("INSERT INTO adminSucursales.idConstructor VALUES(1,%s)",(suc,))
