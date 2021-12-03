@@ -2,7 +2,7 @@
 
 import getpass
 import mysql.connector
-from sucursalesGen import getSucursales
+from sucursalesGen import *
 """
 #Datos de conexion.
 sucursal = input("Sucursal: ").lower()
