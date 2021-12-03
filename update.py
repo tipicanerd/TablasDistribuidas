@@ -116,7 +116,8 @@ def updateClientes(mydb,sucursal,n):
                 omitir = True
                 break
             elif op==2:
-                id_cliente = input("id del cliente: ")
+                idCliente = input("id del cliente: ")
+                query1 = f"SELECT * from {sucursal}.clientes WHERE id='{idCliente}'"
                 mycursor.execute(query1)
                 clienteDatos = mycursor.fetchall()
             else:

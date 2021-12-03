@@ -2,7 +2,6 @@
 
 import getpass
 import mysql.connector
-from sucursalesGen import *
 """
 #Datos de conexion.
 sucursal = input("Sucursal: ").lower()
@@ -17,9 +16,17 @@ mydb = mysql.connector.connect(
   password=pwd
   )"""
 
+#Redefinición por error con import circular con sucursalesGen
+def getSucursales_(mydb):
+  mycursor = mydb.cursor()
+  mycursor.execute("SELECT nombre FROM adminSucursales.sucursales")
+  sucursales = mycursor.fetchall()
+  sucursales = [sucursal[0] for sucursal in sucursales]
+  return sucursales
+
 def createTables(mydb):
     #mydb: mysql.connector.connect, 
-    sucursales = getSucursales(mydb)
+    sucursales = getSucursales_(mydb)
     sucursales = [s.lower() for s in sucursales]
     mycursor = mydb.cursor()
     while(True):
