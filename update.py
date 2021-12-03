@@ -170,9 +170,9 @@ def updateClientes(mydb,sucursal,n):
         #values[-1] = rfc
 
         values.append(idCliente)
-        print(values)
+        #print(values)
         values = tuple(values)
-        print(updateQuery,values)
+        #print(updateQuery,values)
 
         mycursor.execute(updateQuery,values)
         mydb.commit()
