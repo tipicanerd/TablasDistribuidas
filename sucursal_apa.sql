@@ -16,6 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Current Database: `apatzingan`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `apatzingan` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `apatzingan`;
+
+--
+-- Table structure for table `clientes`
+--
+
+DROP TABLE IF EXISTS `clientes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `clientes` (
+  `id` char(9) NOT NULL,
+  `nombre` varchar(250) NOT NULL,
+  `apellidoPaterno` varchar(250) DEFAULT NULL,
+  `apellidoMaterno` varchar(250) DEFAULT NULL,
+  `RFC` char(13) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `RFC` (`RFC`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `clientes`
 --
 
@@ -24,6 +50,27 @@ LOCK TABLES `clientes` WRITE;
 INSERT INTO `clientes` VALUES ('APA000001','Jazmín','López','Chacón','LOCJ010807BE5'),('APA000002','Patricia Ximena','Sánchez','X','SAXP970328AQ2'),('APA000003','Carlota','Gómez','Mendoza','GOMC939101ASG'),('APA000004','Felicia','Pérez','Morales','PEMF990101AST'),('APA000005','Camila','Aguilar','Romero','AGRC870202JKN'),('APA000006','Ramiro','Rojas','Ibarra','ROIR030303AFG'),('APA000007','Pablo','Rosales','Navarro','RONP990404AQW'),('APA000008','Pablo','Rosales','Navarro','RONP990404QWD'),('APA000009','Karina','Trejo','Acosta','TRAK000927ASR'),('APA000010','Juan Gabriel','Santos','Valencia','SAVJ901020AST'),('APA000011','Luis','Miranda','Nava','MINL850818GHT'),('APA000012','Felipe','Aguilar','Torres','AGTF781111ATH'),('APA000013','Ulises','Reyes','López','RELU010122ATR'),('APA000014','Miguel','Castillo','Lara','CALM770909THI'),('APA000015','Emilia','López','Vega','LOVE010118YUI'),('APA000016','Yamilet','Ochoa','Zamora','OCZY880508AND');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `direcciones`
+--
+
+DROP TABLE IF EXISTS `direcciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `direcciones` (
+  `id_cliente` char(9) DEFAULT NULL,
+  `id` int(6) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `calle` varchar(250) DEFAULT NULL,
+  `numero` int DEFAULT NULL,
+  `Colonia` varchar(250) DEFAULT NULL,
+  `Estado` varchar(250) DEFAULT NULL,
+  `CP` char(5) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_cliente` (`id_cliente`),
+  CONSTRAINT `direcciones_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `direcciones`
@@ -44,4 +91,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-30 20:46:15
+-- Dump completed on 2021-12-03 12:02:56
