@@ -35,7 +35,7 @@ def updateDirecciones(mydb,sucursal,n):
                 break
             elif op==2:
                 id_cliente = input("id del cliente: ")
-                mycursor.execute(query1,(idCliente,))
+                mycursor.execute(query1,(id_cliente,))
                 clienteDirs = mycursor.fetchall()
             else:
                 insertDirecciones(mydb, sucursal, 1)
@@ -130,36 +130,49 @@ def updateClientes(mydb,sucursal,n):
 
         print("Se va a actualizar a\n"+" ".join(clienteDatos[0]))
         values = []
+        rfc = ""
+        hasRfc = False
 
         for campo in campos:
             decision = input(f"¿Desea actualizar el {campo}?(Sí|No) ")
             if decision.lower()=="no":
                 continue
+
             nuevo_valor = input(f"Inserte el nuevo valor para el {campo}: ")
+
+            if(campo == 'RFC'):
+                rfc = nuevo_valor
+                hasRfc = True
+
             values.append(nuevo_valor)
             updateQuery += " "+campo+"=%s,"
 
         updateQuery = updateQuery[:-1]
         updateQuery += " WHERE id=%s"
+
+        if(values == []):
+            continue
         
-        rfc = values[-1]
-        while len(rfc)!=13:
-            print("El RFC actualizado no es válido.\nLas opciones disponibles son:")
-            print("1. Omitir actualización.")
-            print("2. Cambiar valor de actualización.")
-            dec = int(input("¿Qué desea hacer? "))
-            if dec==1:
-                omitir=True
-                break
-            else:
-                rfc = input("RFC: ")
+        if(hasRfc):
+            while len(rfc)!=13:
+                print("El RFC actualizado no es válido.\nLas opciones disponibles son:")
+                print("1. Omitir actualización.")
+                print("2. Cambiar valor de actualización.")
+                dec = int(input("¿Qué desea hacer? "))
+                if dec==1:
+                    omitir=True
+                    break
+                else:
+                    rfc = input("RFC: ")
         if omitir:
             continue
 
-        values[-1] = rfc
+        #values[-1] = rfc
 
         values.append(idCliente)
+        print(values)
         values = tuple(values)
+        print(updateQuery,values)
 
         mycursor.execute(updateQuery,values)
         mydb.commit()
