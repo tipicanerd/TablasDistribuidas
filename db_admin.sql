@@ -42,7 +42,7 @@ CREATE TABLE `idConstructor` (
 
 LOCK TABLES `idConstructor` WRITE;
 /*!40000 ALTER TABLE `idConstructor` DISABLE KEYS */;
-INSERT INTO `idConstructor` VALUES (000005,'MOR'),(000017,'APA');
+INSERT INTO `idConstructor` VALUES (000017,'MOR'),(000017,'APA');
 /*!40000 ALTER TABLE `idConstructor` ENABLE KEYS */;
 UNLOCK TABLES;
 
