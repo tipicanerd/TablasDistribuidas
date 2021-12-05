@@ -114,6 +114,10 @@ def insertClientes(mydb, sucursal, n):
 
     mycursor = mydb.cursor()
 
+    #Prepare Staments auxiliares
+    mycursor.execute("PREPARE idGen FROM 'SET @lastid = (SELECT CONCAT(base,number) FROM adminSucursales.idConstructor WHERE base=?)'")
+    mycursor.execute("PREPARE idUp FROM 'UPDATE adminSucursales.idConstructor SET number= number+1 WHERE base=?';")
+
     #Lista de RFCs
     RFCs = []
     sucursales = getSucursales(mydb)
@@ -192,10 +196,6 @@ def insertRegistro(mydb,sucursal):
     #sucursal: str, sucursal desde la que se trabaja.
 
     mycursor= mydb.cursor()
-
-    #Prepare Staments auxiliares
-    mycursor.execute("PREPARE idGen FROM 'SET @lastid = (SELECT CONCAT(base,number) FROM adminSucursales.idConstructor WHERE base=?)'")
-    mycursor.execute("PREPARE idUp FROM 'UPDATE adminSucursales.idConstructor SET number= number+1 WHERE base=?';")
 
     tabla = input('¿Qué desea agregar? (cliente|dirección) ')
 
