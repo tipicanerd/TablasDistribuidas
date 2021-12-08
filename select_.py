@@ -182,14 +182,14 @@ def select(mydb,sucursales,columns,conditions = None):
     if(tieneDirecciones):
         for s in sucursales:
             query = f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente WHERE {condString}"
-            print(query)
+            #print(query)
             mycursor.execute(f"SELECT {colString} FROM {s}.clientes INNER JOIN {s}.direcciones ON {s}.clientes.id = {s}.direcciones.id_cliente WHERE {condString}")
             clientes += mycursor.fetchall()
 
     else:
         for s in sucursales:
             query = f"SELECT {colString} FROM {s}.clientes  WHERE {condString}"
-            print(query)
+            #print(query)
             mycursor.execute(query)
             clientes += mycursor.fetchall()
     return clientes
